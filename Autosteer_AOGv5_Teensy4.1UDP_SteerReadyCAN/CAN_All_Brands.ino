@@ -681,13 +681,13 @@ void K_Receive()
       {
           if (KBusReceiveData.id == 0x14FF7706)   //**case IH Engage Message**  
           {
-            if ((KBusReceiveData.buf[0])== 130 && (KBusReceiveData.buf[1])== 1)
-            {   
-              Time = millis();
-              digitalWrite(engageLED,HIGH); 
-              engageCAN = 1;
-              relayTime = ((millis() + 1000));
-            }
+            //if ((KBusReceiveData.buf[0])== 130 && (KBusReceiveData.buf[1])== 1)
+            //{   
+              //Time = millis();
+              //digitalWrite(engageLED,HIGH); 
+              //engageCAN = 1;
+              //relayTime = ((millis() + 1000));
+            //}
 
             if ((KBusReceiveData.buf[0])== 178 && (KBusReceiveData.buf[1])== 4)
             {   
