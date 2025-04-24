@@ -85,14 +85,9 @@ void GGA_Handler() //Rec'd GGA
     bnoTimer = 0;
     bnoTrigger = true;
 
-    if (useBNO08x)
+if (UseImuCan == 1)
     {
-       imuHandler();          //Get IMU data ready
-       BuildNmea();           //Build & send data GPS data to AgIO
-    }
-
-    else if (useBNO08xRVC)
-    {
+        imuHandler();
         BuildNmea();           //Build & send data GPS data to AgIO
     }
 
@@ -148,8 +143,7 @@ void ZDA_Handler()
 void imuHandler()
 {
     int16_t temp = 0;
-
-    if (useBNO08x)
+if (UseImuCan == 1)
     {
         //BNO is reading in its own timer    
         // Fill rest of Panda Sentence - Heading
@@ -166,51 +160,6 @@ void imuHandler()
 
         // YawRate - 0 for now
         itoa(0, imuYawRate, 10);
-    }
-
-    else if (useBNO08xRVC)
-    {
-        float angVel;
-
-        // Fill rest of Panda Sentence - Heading
-        itoa(bnoData.yawX10, imuHeading, 10);
-
-        if (steerConfig.IsUseY_Axis)
-        {
-            // the pitch x100
-            itoa(bnoData.pitchX10, imuPitch, 10);
-
-            // the roll x100
-            itoa(bnoData.rollX10, imuRoll, 10);
-        }
-        else
-        {
-            // the pitch x100
-            itoa(bnoData.rollX10, imuPitch, 10);
-
-            // the roll x100
-            itoa(bnoData.pitchX10, imuRoll, 10);
-        }
-
-        //Serial.print(rvc.angCounter);
-        //Serial.print(", ");
-        //Serial.print(bnoData.angVel);
-        //Serial.print(", ");
-        // YawRate
-        if (rvc.angCounter > 0)
-        {
-            angVel = ((float)bnoData.angVel) / (float)rvc.angCounter;
-            angVel *= 10.0;
-            rvc.angCounter = 0;
-            bnoData.angVel = (int16_t)angVel;
-        }
-        else
-        {
-            bnoData.angVel = 0;
-        }
-
-        itoa(bnoData.angVel, imuYawRate, 10);
-        bnoData.angVel = 0;
     }
 }
 
@@ -277,7 +226,7 @@ void BuildNmea(void)
 
     strcat(nmea, "\r\n");
 
-
+//Serial.write(nmea);
     //off to AOG
     int len = strlen(nmea);
     Udp.beginPacket(ipDestination, 9999);
